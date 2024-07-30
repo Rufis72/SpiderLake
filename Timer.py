@@ -7,49 +7,49 @@ screen_X = 1000
 screen_Y = 800
 screen = pygame.display.set_mode((screen_X, screen_Y))
 # Declaring variables - rectangles
-rectangles_x = [10, 300, 600]
-rectangles_y = [60, 200, 400]
-rectangles_width = [100, 49, 32]
-rectangles_height = [100, 122, 67]
-rectangles_red = [255, 193, 42]
-rectangles_green = [30, 29, 146]
-rectangles_blue = [187, 255, 46]
-rectangles_dictionary = [1, 2, 3]
+rectangles_x = []
+rectangles_y = []
+rectangles_width = []
+rectangles_height = []
+rectangles_red = []
+rectangles_green = []
+rectangles_blue = []
+rectangles_dictionary = []
 background_color = (0, 0, 0)
-rectangles_outline = [0, 0, 0]
+rectangles_outline = []
 # Declaring variables - lines
 # Declaring variables - Lines - location
-lines_start_x = [90, 400, 26]
-lines_start_y = [90, 400, 43]
-lines_end_x = [180, 550, 98]
-lines_end_y = [180, 600, 87]
+lines_start_x = []
+lines_start_y = []
+lines_end_x = []
+lines_end_y = []
 # Declaring variables - Lines - apearence
-lines_thickness = [3, 1, 2]
-lines_color_red = [255, 0, 127]
-lines_color_green = [127, 0, 63]
-lines_color_blue = [0, 255, 31]
+lines_thickness = []
+lines_color_red = []
+lines_color_green = []
+lines_color_blue = []
 # Declaring variables - Lines - Dictionary
-lines_dictionary = [1, 2, 3]
+lines_dictionary = []
 # Declaring variables - Text
 # Declaring variables - Text - Fonts
 text_fonts = []
 # Declaring variables - Text - Text/General
 text_text_color = []
-text_text_red = [30, 46]
-text_text_green = [90, 83]
-text_text_blue = [140, 72]
-text_text = ["Smwall", "Bw-w-wig"]
+text_text_red = []
+text_text_green = []
+text_text_blue = []
+text_text = []
 text_rendertracking = []
-text_backround_red = [None, 47]
-text_backround_green = [None, 96]
-text_backround_blue = [None, 129]
+text_backround_red = []
+text_backround_green = []
+text_backround_blue = []
 text_backround_color = []
-text_font = ["/System/Library/Fonts/Supplemental/Arial Unicode.ttf", "/System/Library/Fonts/Supplemental/Arial Unicode.ttf"]
-text_size = [20, 20]
+text_font = []
+text_size = []
 text_rect = []
-text_dictionary = [1, 2]
-text_X = [200, 476]
-text_Y = [200, 369]
+text_dictionary = []
+text_X = []
+text_Y = []
 # Declaring variables - Text - Font
 font_path = []
 font_name = pygame.font.get_fonts()
@@ -401,13 +401,7 @@ def getRectRightClicked(DictID):
         return False
 editText(2, Font="herculanum")
 
-drawText("Arial", 30, 0, 0, "TEST, WORK NOW!", None, (255, 255, 255))
-makeevent(gettimein(3), print, "awooga", "test")
-makeevent(gettimein(10), drawRect, (400, 400, 400, 400, (255, 0, 255)), "test for draw rect w/ event")
-maketimerloop(30, 30, 0, 300, 100, (0, 255, 0), gettimein(7), 5, (255, 255, 255), "Test timer")
-maketimerloop(30, 90, 0, 300, 100, (0, 255, 0), gettimein(7), 5, (255, 255, 255), "Test timer")
-makeevent(gettimein(2), editText, (1, "edited"), "edittesting")
-drawRect(90, 90, 300, 300, (255, 155, 55), 18)
+
 # Game loop:
 while (True):
     pygame.display.set_caption(Window_title)
