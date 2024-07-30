@@ -43,14 +43,19 @@ text_backround_red = [None, 47]
 text_backround_green = [None, 96]
 text_backround_blue = [None, 129]
 text_backround_color = []
-text_font = ["Fonts/Arial Unicode.ttf", "Fonts/Arial Unicode.ttf"]
+text_font = ["/System/Library/Fonts/Supplemental/Arial Unicode.ttf", "/System/Library/Fonts/Supplemental/Arial Unicode.ttf"]
 text_size = [20, 20]
 text_rect = []
 text_dictionary = [1, 2]
-font_name = ["Arial"]
-font_location = ["Fonts/Arial Unicode.ttf"]
 text_X = [200, 476]
 text_Y = [200, 369]
+# Declaring variables - Text - Font
+font_path = []
+font_name = pygame.font.get_fonts()
+for i in range(len(font_name)):
+    font_path.append(pygame.font.match_font(font_name[i]))
+font_name[font_name.index("arialunicode")] = "arial"
+
 # Declaring variables - Timers
 Gametick = 0
 Timestart = time.time()
@@ -72,7 +77,7 @@ Window_title = "Timer app"
 
 # defining functions
 def getFontViaName(Name):
-    return(font_location[font_name.index(Name)])
+    return(font_path[font_name.index(Name.lower())])
 
 
 def gettimein(wait):
@@ -280,7 +285,7 @@ def editText(DictID, Text = None, X = None, Y = None, Font = None, Font_Size = N
 def timerloop(percentage, total_time, DictID, full_rect_width, title):
     title_new = str(title) + "iteration" + str(percentage)
     if percentage >= 100:
-        drawText("Arial", 20, rectangles_x[getRectIndexViaDict(DictID)], rectangles_y[getRectIndexViaDict(DictID)], "Timer \"" + str(title) + "\" complete!", None, (255, 255, 255))
+        drawText("Fredoka", 20, rectangles_x[getRectIndexViaDict(DictID)], rectangles_y[getRectIndexViaDict(DictID)], "Timer \"" + str(title) + "\" complete!", None, (255, 255, 255))
         delRect(DictID)
     else:
         editRect(DictID=DictID, Width=full_rect_width * (percentage / 100))

@@ -16,5 +16,13 @@ while(True):
     pygame.display.flip()'''
 import pygame
 pygame.init()
-while True:
-    print(pygame.mouse.get_pos())
+fonts = pygame.font.get_fonts()
+fontpath = [[]]
+fontpath.append(["Bold"])
+fontpath.append(["Italic"])
+fontpath.append(["Normal"])
+for i in range(len(fonts)):
+    fontpath[0].append(pygame.font.match_font(fonts[i], True, False))
+    fontpath[1].append(pygame.font.match_font(fonts[i], False, True))
+    fontpath[2].append(pygame.font.match_font(fonts[i], False, False))
+print(fontpath)
