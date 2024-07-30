@@ -16,6 +16,7 @@ rectangles_green = [30, 29, 146]
 rectangles_blue = [187, 255, 46]
 rectangles_dictionary = [1, 2, 3]
 background_color = (0, 0, 0)
+rectangles_outline = [0, 0, 0]
 # Declaring variables - lines
 # Declaring variables - Lines - location
 lines_start_x = [90, 400, 26]
@@ -140,6 +141,7 @@ def delRect(DictID):
         del rectangles_color[getRectIndexViaDict(DictID)]
         del rectangles_height[getRectIndexViaDict(DictID)]
         del rectangles_width[getRectIndexViaDict(DictID)]
+        del rectangles_outline[getRectIndexViaDict(DictID)]
         del rectangles_dictionary[getRectIndexViaDict(DictID)]
     except IndexError:
         return None
@@ -198,7 +200,7 @@ def makeevent(acvtivationpoint, function, functionarguments, title):
     eventtitles.append(title)
 
 
-def drawRect(X, Y, Width, Height, Color):
+def drawRect(X, Y, Width, Height, Color, Outline = 0):
     global rectangles_height, rectangles_width, rectangles_x, rectangles_y, rectangles_red, rectangles_green, rectangles_blue, rectangles_dictionary
     rectangles_width.append(Width)
     rectangles_height.append(Height)
@@ -207,6 +209,7 @@ def drawRect(X, Y, Width, Height, Color):
     rectangles_red.append(Color[0])
     rectangles_green.append(Color[1])
     rectangles_blue.append(Color[2])
+    rectangles_outline.append(Outline)
     try:
         rectangles_dictionary.append(rectangles_dictionary[-1] + 1)
     except:
@@ -288,19 +291,29 @@ def editText(DictID, Text = None, X = None, Y = None, Font = None, Font_Size = N
         print("editText error")
 
 
-def timerloop(percentage, total_time, DictID, full_rect_width, title):
+def timerloop(percentage, total_time, DictID, full_rect_width, outline_rectID, title):
     title_new = str(title) + "iteration" + str(percentage)
     if percentage >= 100:
         drawText("Fredoka", 20, rectangles_x[getRectIndexViaDict(DictID)], rectangles_y[getRectIndexViaDict(DictID)], "Timer \"" + str(title) + "\" complete!", None, (255, 255, 255))
         delRect(DictID)
+        delRect(outline_rectID)
     else:
         editRect(DictID=DictID, Width=full_rect_width * (percentage / 100))
-        makeevent(total_time * (percentage / 100), timerloop, (percentage + 1, total_time, DictID, full_rect_width, title), title_new)
+        makeevent(total_time * (percentage / 100), timerloop, (percentage + 1, total_time, DictID, full_rect_width, outline_rectID, title), title_new)
 
 
-def maketimerloop(rect_x, rect_y, starting_rect_width, full_rect_width, rect_height, rect_color, end_time, Title):
-    rectdict = drawRect(rect_x, rect_y, starting_rect_width, rect_height, rect_color)
-    makeevent(time.time() - Timestart, timerloop, (0, end_time - (time.time() - Timestart), rectdict, full_rect_width, Title), Title)
+def maketimerloop(rect_x, rect_y, starting_rect_width, full_rect_width, full_rect_height, rect_color, end_time, outline_thickness, outline_color, title):
+    rectdict = drawRect(rect_x, rect_y, starting_rect_width, full_rect_height, rect_color)
+    outline_rectangle_ID = drawOutline(rect_x - outline_thickness, rect_y - outline_thickness, full_rect_width + outline_thickness, full_rect_height + outline_thickness, outline_thickness, outline_color)
+    makeevent(time.time() - Timestart,
+              timerloop,
+                (0,
+                                end_time - (time.time() - Timestart),
+                                rectdict,
+                                full_rect_width,
+                                outline_rectangle_ID,
+                                title),
+              str(title) + "iteration 0")
 
 
 def drawLine(SX, SY, EX, EY, Color, Thick):
@@ -346,13 +359,8 @@ def drawText(Font, Font_Size, X, Y, Text, Backround_Color, Color):
     return(text_dictionary[-1])
 
 
-def drawOutline_Line(X, Y, Width, Height, Thickness, Color):
-    indexs = []
-    indexs.append(drawLine(X, Y, X + Width, Y, Color, Thickness))
-    indexs.append(drawLine(X, Y, X, Y + Height, Color, Thickness))
-    indexs.append(drawLine(X + Width, Y + Height, X, Y + Height, Color, Thickness))
-    indexs.append(drawLine(X + Width, Y + Height, X + Width, Y, Color, Thickness))
-    return indexs
+def drawOutline(X, Y, Width, Height, Thickness, Color):
+    return drawRect(X, Y, Width, Height, Color, Thickness)
 
 
 def random_add_line_or_rectangle(globchance):
@@ -396,10 +404,10 @@ editText(2, Font="herculanum")
 drawText("Arial", 30, 0, 0, "TEST, WORK NOW!", None, (255, 255, 255))
 makeevent(gettimein(3), print, "awooga", "test")
 makeevent(gettimein(10), drawRect, (400, 400, 400, 400, (255, 0, 255)), "test for draw rect w/ event")
-maketimerloop(30, 30, 0, 300, 100, (0, 255, 0), gettimein(7), "Test timer")
-maketimerloop(30, 30, 0, 300, 100, (0, 255, 0), gettimein(7), "Test timer")
+maketimerloop(30, 30, 0, 300, 100, (0, 255, 0), gettimein(7), 5, (255, 255, 255), "Test timer")
+maketimerloop(30, 90, 0, 300, 100, (0, 255, 0), gettimein(7), 5, (255, 255, 255), "Test timer")
 makeevent(gettimein(2), editText, (1, "edited"), "edittesting")
-
+drawRect(90, 90, 300, 300, (255, 155, 55), 18)
 # Game loop:
 while (True):
     pygame.display.set_caption(Window_title)
@@ -438,7 +446,7 @@ while (True):
     for i in range(len(text_rendertracking)):
         screen.blit(text_rendertracking[i], text_rect[i])
     for i in range(len(rectangles_x)):
-        pygame.draw.rect(screen, rectangles_color[i], pygame.Rect(rectangles_x[i], rectangles_y[i], rectangles_width[i], rectangles_height[i]))
+        pygame.draw.rect(screen, rectangles_color[i], pygame.Rect(rectangles_x[i], rectangles_y[i], rectangles_width[i], rectangles_height[i]), rectangles_outline[i])
     for i in range(len(lines_thickness)):
         pygame.draw.line(screen, lines_color[i], (lines_start_x[i], lines_start_y[i]), (lines_end_x[i], lines_end_y[i]),lines_thickness[i])
     for i in range(len(upcomingeventtimes) -1, -1, -1):
