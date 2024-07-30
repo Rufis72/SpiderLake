@@ -77,7 +77,13 @@ Window_title = "Timer app"
 
 # defining functions
 def getFontViaName(Name):
-    return(font_path[font_name.index(Name.lower())])
+    try:
+        return(font_path[font_name.index(Name.lower())])
+    except IndexError:
+        try:
+            return(font_path[font_name.index("Arial")])
+        except IndexError:
+            return font_path[0]
 
 
 def gettimein(wait):
@@ -264,13 +270,13 @@ def editText(DictID, Text = None, X = None, Y = None, Font = None, Font_Size = N
             text_Y[getTextIndexViaDict(DictID)] = Y
         if Font != None:
             global text_font
-            text_font.append(Font)
+            text_font[getTextIndexViaDict(DictID)] = getFontViaName(Font)
         if Font_Size != None:
             global text_size
-            text_size.append(Font_Size)
+            text_size[getTextIndexViaDict(DictID)] = Font_Size
         if Color != None:
             global text_text_red, text_text_green, text_text_blue
-            text_text_red[getTextIndexViaDict(DictID)] = Clock[0]
+            text_text_red[getTextIndexViaDict(DictID)] = Color[0]
             text_text_green[getTextIndexViaDict(DictID)] = Color[1]
             text_text_blue[getTextIndexViaDict(DictID)] = Color[2]
         if Background_Color != None:
@@ -385,7 +391,7 @@ def getRectRightClicked(DictID):
         return True
     else:
         return False
-
+editText(2, Font="herculanum")
 
 drawText("Arial", 30, 0, 0, "TEST, WORK NOW!", None, (255, 255, 255))
 makeevent(gettimein(3), print, "awooga", "test")

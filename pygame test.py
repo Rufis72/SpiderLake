@@ -26,3 +26,4 @@ for i in range(len(fonts)):
     fontpath[1].append(pygame.font.match_font(fonts[i], False, True))
     fontpath[2].append(pygame.font.match_font(fonts[i], False, False))
 print(fontpath)
+print(fonts)
