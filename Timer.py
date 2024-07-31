@@ -398,17 +398,12 @@ def drawOutline(X, Y, Width, Height, Thickness, Color):
     return drawRect(X, Y, Width, Height, Color, Thickness)
 
 
-def random_add_line_or_rectangle(globchance):
-    global rectangles_height, rectangles_width, rectangles_x, rectangles_y, rectangles_red, rectangles_green, rectangles_blue, lines_thickness, lines_color_blue, lines_color_green, lines_color_red, lines_end_x, lines_end_y, lines_start_y, lines_start_x
-    lines_start_x.append(random.randint(1, screen_X))
-    lines_start_y.append((random.randint(1, screen_Y)))
-    lines_color_red.append(random.randint(0, 255))
-    lines_color_green.append(random.randint(0, 255))
-    lines_color_blue.append(random.randint(0, 255))
-    lines_end_x.append(random.randint(1, screen_X))
-    lines_end_y.append(random.randint(1, screen_Y))
-    lines_thickness.append(random.randint(1, 15))
-    lineDeltimer.append(None)
+def random_add_line_or_rectangle():
+    if random.randint(1, 2) == 2:
+        drawLine(random.randint(1, screen_X), random.randint(1, screen_Y), random.randint(1, screen_X), random.randint(1, screen_Y), (random.randint(1, 255), random.randint(1, 255), random.randint(1, 255)), random.randint(1, 10))
+    if random.randint(1, 2) == 2:
+        drawRect(random.randint(1, screen_X), random.randint(1, screen_Y), random.randint(1, 200), random.randint(1, 200), (random.randint(1, 255), random.randint(1, 255), random.randint(1, 255)), random.randint(1, 255))
+
 
 
 def getCollidingWithRect(Coords, DictID):
@@ -435,9 +430,7 @@ def getRectRightClicked(DictID):
     else:
         return False
 
-drawRect(30, 30, 30, 30, (30, 30, 30))
-drawButton(print, "it worked!")
-editRect(1, Button_ID=1)
+
 # Game loop:
 while (True):
     pygame.display.set_caption(Window_title)
@@ -451,10 +444,6 @@ while (True):
     text_backround_color = []
     text_rect = []
     text_fonts = []
-    for i in range(len(rectangles_blue)):
-        rectangles_color.append((rectangles_red[i], rectangles_green[i], rectangles_blue[i]))
-    for i in range(len(lines_color_blue)):
-        lines_color.append((lines_color_red[i], lines_color_green[i], lines_color_blue[i]))
     for i in range(len(text_text)):
         text_text_color.append((text_text_red[i], text_text_green[i], text_text_blue[i]))
     for i in range(len(text_backround_red)):
@@ -479,9 +468,9 @@ while (True):
     for i in range(len(text_rendertracking)):
         screen.blit(text_rendertracking[i], text_rect[i])
     for i in range(len(rectangles_x)):
-        pygame.draw.rect(screen, rectangles_color[i], pygame.Rect(rectangles_x[i], rectangles_y[i], rectangles_width[i], rectangles_height[i]), rectangles_outline[i])
+        pygame.draw.rect(screen, (rectangles_red[i], rectangles_green[i], rectangles_blue[i]), pygame.Rect(rectangles_x[i], rectangles_y[i], rectangles_width[i], rectangles_height[i]), rectangles_outline[i])
     for i in range(len(lines_thickness)):
-        pygame.draw.line(screen, lines_color[i], (lines_start_x[i], lines_start_y[i]), (lines_end_x[i], lines_end_y[i]),lines_thickness[i])
+        pygame.draw.line(screen, (lines_color_red[i], lines_color_green[i], lines_color_blue[i]), (lines_start_x[i], lines_start_y[i]), (lines_end_x[i], lines_end_y[i]),lines_thickness[i])
     for i in range(len(upcomingeventtimes) -1, -1, -1):
         if upcomingeventtimes[i] < time.time() - Timestart:
             runfunc(eventfunction[i], eventfunctionargs[i])
