@@ -17,6 +17,7 @@ rectangles_blue = []
 rectangles_dictionary = []
 background_color = (0, 0, 0)
 rectangles_outline = []
+rectangles_button_ID = []
 # Declaring variables - lines
 # Declaring variables - Lines - location
 lines_start_x = []
@@ -50,6 +51,7 @@ text_rect = []
 text_dictionary = []
 text_X = []
 text_Y = []
+text_button_ID = []
 # Declaring variables - Text - Font
 font_path = []
 font_name = pygame.font.get_fonts()
@@ -74,6 +76,10 @@ Clock = pygame.time.Clock()
 rectangles_color = []
 lines_color = []
 Window_title = "Timer app"
+# Declaring variables - Buttons
+button_dictionary = []
+button_functions = []
+button_functions_arguments = []
 
 
 # defining functions
@@ -82,13 +88,31 @@ def getFontViaName(Name):
         return(font_path[font_name.index(Name.lower())])
     except IndexError:
         try:
-            return(font_path[font_name.index("Arial")])
+            return font_path[font_name.index("Arial")]
         except IndexError:
             return font_path[0]
 
 
+def getButtonIndexViaDictID(DictID):
+    try:
+        return button_dictionary.index(DictID)
+    except IndexError:
+        return -1
+
+
 def gettimein(wait):
     return (time.time() - Timestart) + wait
+
+
+def drawButton(function, function_args):
+    global button_functions, button_functions_arguments, button_dictionary
+    try:
+        button_dictionary.append(button_dictionary[-1] + 1)
+    except IndexError:
+        button_dictionary.append(1)
+    button_functions.append(function)
+    button_functions_arguments.append(function_args)
+    return button_dictionary[-1]
 
 
 def getRectIndexViaDict(DictID):
@@ -110,6 +134,12 @@ def getTextIndexViaDict(DictID):
         return text_dictionary.index(DictID)
     except ValueError:
         return -1
+
+
+def delButton(DictID):
+    del button_functions[getButtonIndexViaDictID(DictID)]
+    del button_functions_arguments[getButtonIndexViaDictID(DictID)]
+    del button_dictionary[getButtonIndexViaDictID(DictID)]
 
 
 def delLine(DictID):
@@ -142,6 +172,7 @@ def delRect(DictID):
         del rectangles_height[getRectIndexViaDict(DictID)]
         del rectangles_width[getRectIndexViaDict(DictID)]
         del rectangles_outline[getRectIndexViaDict(DictID)]
+        del rectangles_button_ID[getButtonIndexViaDictID(DictID)]
         del rectangles_dictionary[getRectIndexViaDict(DictID)]
     except IndexError:
         return None
@@ -210,14 +241,15 @@ def drawRect(X, Y, Width, Height, Color, Outline = 0):
     rectangles_green.append(Color[1])
     rectangles_blue.append(Color[2])
     rectangles_outline.append(Outline)
+    rectangles_button_ID.append(None)
     try:
         rectangles_dictionary.append(rectangles_dictionary[-1] + 1)
-    except:
+    except IndexError:
         rectangles_dictionary.append(1)
     return(rectangles_dictionary[-1])
 
 
-def editRect(DictID, X = None, Y = None, Width = None, Height = None, Color = None):
+def editRect(DictID, X = None, Y = None, Width = None, Height = None, Color = None, Button_ID = None):
     if X != None:
         global rectangles_x
         rectangles_x[getRectIndexViaDict(DictID)] = X
@@ -235,6 +267,9 @@ def editRect(DictID, X = None, Y = None, Width = None, Height = None, Color = No
         rectangles_red[getRectIndexViaDict(DictID)] = Color[0]
         rectangles_green[getRectIndexViaDict(DictID)] = Color[1]
         rectangles_blue[getRectIndexViaDict(DictID)] = Color[2]
+    if Button_ID != None:
+        global rectangles_button_ID
+        rectangles_button_ID[getButtonIndexViaDictID(DictID)] = Button_ID
 
 
 def editLine(Index, start_X = None, start_Y = None, end_X = None, end_Y = None, thickness = None, color = None):
@@ -387,7 +422,7 @@ def getCollidingWithRect(Coords, DictID):
 
 
 def getRectLeftClicked(DictID):
-    if pygame.mouse.get_pressed(num_buttons=3)[0] and getCollidingWithRect(pygame.mouse.get_pos(), DictID):
+    if pygame.mouse.get_pressed(3)[0] and getCollidingWithRect(pygame.mouse.get_pos(), DictID):
         return True
     else:
         return False
@@ -395,13 +430,14 @@ def getRectLeftClicked(DictID):
 
 
 def getRectRightClicked(DictID):
-    if pygame.mouse.get_pressed(num_buttons=3)[2] and getCollidingWithRect(pygame.mouse.get_pos(), DictID):
+    if pygame.mouse.get_pressed(3)[2] and getCollidingWithRect(pygame.mouse.get_pos(), DictID):
         return True
     else:
         return False
-editText(2, Font="herculanum")
 
-
+drawRect(30, 30, 30, 30, (30, 30, 30))
+drawButton(print, "it worked!")
+editRect(1, Button_ID=1)
 # Game loop:
 while (True):
     pygame.display.set_caption(Window_title)
@@ -434,6 +470,9 @@ while (True):
         text_rect.append(text_rendertracking[i].get_rect())
     for i in range(len(text_rect)):
         text_rect[i].topleft = (text_X[i], text_Y[i])
+    for i in range(len(rectangles_dictionary)):
+        if rectangles_button_ID[i] != None and getRectLeftClicked(rectangles_dictionary[i]):
+            runfunc(button_functions[getButtonIndexViaDictID(rectangles_button_ID[i])], button_functions_arguments[getButtonIndexViaDictID(rectangles_button_ID[i])])
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             sys.exit(0)
